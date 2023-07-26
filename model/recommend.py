@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import pickle
 import ast
+import os
 
 from pandas import DataFrame
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
@@ -63,8 +64,13 @@ def generate_recommendation(movie: str, movies_df: DataFrame, similarity, count=
 def run_recommendation_algorithm():
     global new_df
     global similarity
-    credits_df = pd.read_csv('./credits.csv')
-    movies_df = pd.read_csv('./movies.csv')
+    current_directory = os.getcwd()
+
+    # Construct the absolute paths for the CSV files
+    credits_file = os.path.join(current_directory, 'model', 'credits.csv')
+    movies_file = os.path.join(current_directory, 'model', 'movies.csv')
+    credits_df = pd.read_csv(credits_file)
+    movies_df = pd.read_csv(movies_file)
 
 
     # print(movies_df.shape)
@@ -116,9 +122,10 @@ def run_recommendation_algorithm():
     similarity = cosine_similarity(vectors)
 
 
-    print(generate_recommendation('Iron Man', new_df, similarity, 4))
-    print(generate_recommendation('Independence Day', new_df, similarity, 4))
-    print(generate_recommendation('Avatar', new_df, similarity, 4))
+    # print(generate_recommendation('Iron Man', new_df, similarity, 4))
+    # print(generate_recommendation('Independence Day', new_df, similarity, 4))
+    # print(generate_recommendation('Avatar', new_df, similarity, 4))
+    return None
 
 
 def run_script():
@@ -129,11 +136,15 @@ def run_script():
     except Exception as e:
         print("Error running recommendation script: ", e)
     else:
-        pickle.dump(new_df, open('movies_list.pkl', 'wb'))
-        pickle.dump(similarity, open('similarity.pkl', 'wb'))
+        current_directory = os.getcwd()
+        similarity_pkl_file = os.path.join(current_directory, 'model', 'smilarity.pkl')
+        movies_pkl_file = os.path.join(current_directory, 'model', 'movies_list.pkl')
+        pickle.dump(new_df, open(movies_pkl_file, 'wb'))
+        pickle.dump(similarity, open(similarity_pkl_file, 'wb'))
 
         print("Recommendation script run successfully")
         print('Pickle files generated...')
         print('\n\nDone! Have a safe working day🎉✨')
+    return None
         
 run_script()
