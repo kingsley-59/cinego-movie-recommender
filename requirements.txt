@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+scikit-learn 
+scipy 
+matplotlib 
+numpy
+pandas
+nltk
+mysql-connector-python

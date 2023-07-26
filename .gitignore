@@ -1,0 +1,5 @@
+model/*.pkl
+
+.vscode
+__pycache__
+cinego-venv
