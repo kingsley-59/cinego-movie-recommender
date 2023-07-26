@@ -137,7 +137,7 @@ def run_script():
         print("Error running recommendation script: ", e)
     else:
         current_directory = os.getcwd()
-        similarity_pkl_file = os.path.join(current_directory, 'model', 'smilarity.pkl')
+        similarity_pkl_file = os.path.join(current_directory, 'model', 'similarity.pkl')
         movies_pkl_file = os.path.join(current_directory, 'model', 'movies_list.pkl')
         pickle.dump(new_df, open(movies_pkl_file, 'wb'))
         pickle.dump(similarity, open(similarity_pkl_file, 'wb'))
