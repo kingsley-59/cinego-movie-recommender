@@ -40,7 +40,7 @@ def index():
     return {"message": "Hello there!"}
 
 @app.get('/movies/{movie_id}')
-async def get_movie(movie_id: int | str):
+async def get_movie(movie_id: Union[int, str]):
     csv_file_path = './model/movies.csv'
     movies = None
     try:
