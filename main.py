@@ -7,8 +7,8 @@ import signal
 from typing import Union, List
 from fastapi import FastAPI
 from fastapi.responses import PlainTextResponse
-import pickle
 from pandas import DataFrame
+# from memory_profiler import profile
 from movies import get_movie_by_id, get_movie_by_name
 from model.recommend import run_script, generate_recommendation
 
@@ -27,6 +27,7 @@ def load_pickle_file(file_path: str):
         print(f"File {file_path} does not exist")
         return None
 
+# @profile
 def load_data():
     global movies_df
     global similarity

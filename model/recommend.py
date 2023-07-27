@@ -8,6 +8,7 @@ from pandas import DataFrame
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from nltk.stem.porter import PorterStemmer
+# from memory_profiler import profile
 
 ps = PorterStemmer()
 new_df = None
@@ -59,8 +60,8 @@ def generate_recommendation(movie: str, movies_df: DataFrame, similarity, count=
 
     return recommended_movies
 
-
 # Rest of the script to generate similarity and dataframe
+# @profile
 def run_recommendation_algorithm():
     global new_df
     global similarity
@@ -69,16 +70,10 @@ def run_recommendation_algorithm():
     # Construct the absolute paths for the CSV files
     credits_file = os.path.join(current_directory, 'model', 'credits.csv')
     movies_file = os.path.join(current_directory, 'model', 'movies.csv')
-    credits_df = pd.read_csv(credits_file)
-    movies_df = pd.read_csv(movies_file)
-
-
-    # print(movies_df.shape)
-    # print(movies_df.info())
-    # print(credits_df.head())
-    # print(movies_df.head()) # or .tail() to get the last few lines
 
     # Merge credits and movies dataframe where title is the same
+    credits_df = pd.read_csv(credits_file)
+    movies_df = pd.read_csv(movies_file)
     movies_df = movies_df.merge(credits_df, on='title')
 
     # Create a new dataframe, picking only the columns necessary
@@ -108,23 +103,16 @@ def run_recommendation_algorithm():
     new_df['tags'] = new_df['tags'].apply(lambda x:x.lower())
 
     # Matrix based on count vectorizer and tfidf vectorizer
-    cv = CountVectorizer(max_features=5000, stop_words='english')
-    tfidf = TfidfVectorizer(stop_words='english')
-
-    # Create vectors with any of the vectorizers
-    print(cv.fit_transform(new_df['tags']).toarray().shape)
-    # vectors = cv.fit_transform(new_df['tags']).toarray()
+    tfidf = TfidfVectorizer(max_features=5000, stop_words='english', use_idf=True, norm='l2')
     vectors = tfidf.fit_transform(new_df['tags']).toarray()
-    print(len(cv.get_feature_names_out()))
 
     # Apply stem function and generate similarity
     new_df['tags'] = new_df['tags'].apply(stem)
     similarity = cosine_similarity(vectors)
+    
+    # Clear large variables no longer needed to free up memory
+    del vectors
 
-
-    # print(generate_recommendation('Iron Man', new_df, similarity, 4))
-    # print(generate_recommendation('Independence Day', new_df, similarity, 4))
-    # print(generate_recommendation('Avatar', new_df, similarity, 4))
     return None
 
 
