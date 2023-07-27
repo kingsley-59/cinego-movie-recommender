@@ -2,13 +2,17 @@ import uvicorn
 import os
 import sys
 import pandas as pd
+import signal
 
 from typing import Union, List
 from fastapi import FastAPI
+from fastapi.responses import PlainTextResponse
 import pickle
 from pandas import DataFrame
 from movies import get_movie_by_id, get_movie_by_name
 from model.recommend import run_script, generate_recommendation
+
+pd.options.mode.chained_assignment = None
 
 app = FastAPI()
 
@@ -73,6 +77,10 @@ async def get_movie_recommendation(movie: Union[str, None] = None, count: int = 
             "recommendation": result
         }
 
+@app.get("/shutdown")
+async def shutdown():
+    os.kill(os.getpid(), signal.SIGINT)
+    return PlainTextResponse("Server shutting down")
 
 if __name__ == "__main__":
     print(os.path.exists('./model/movies_list.pkl') and os.path.exists('./model/similarity.pkl'))
@@ -82,9 +90,9 @@ if __name__ == "__main__":
         print("Pkl files not found...!")
         run_script()
         load_data()
-    
+
     
     if (movies_df is None or similarity is None): 
         print('Both paths to movies list and similarity must be valid')
         sys.exit(1)
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=False)
