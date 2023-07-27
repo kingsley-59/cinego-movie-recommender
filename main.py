@@ -93,7 +93,8 @@ if __name__ == "__main__":
     else:
         print("Pkl files not found...!")
         run_script()
+        load_data()
         if (movies_df is None or similarity is None): 
-            print('Both paths to movies list and similarity must be valid')
+            print('App data error: Both paths to movies list and similarity must be valid')
             sys.exit(1)
         uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=False)
