@@ -146,5 +146,3 @@ def run_script():
         print('Pickle files generated...')
         print('\n\nDone! Have a safe working day🎉✨')
     return None
-        
-run_script()

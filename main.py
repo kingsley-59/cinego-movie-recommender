@@ -86,13 +86,14 @@ if __name__ == "__main__":
     print(os.path.exists('./model/movies_list.pkl') and os.path.exists('./model/similarity.pkl'))
     if os.path.exists('./model/movies_list.pkl') and os.path.exists('./model/similarity.pkl'):
         load_data()
+        if (movies_df is None or similarity is None): 
+            print('Both paths to movies list and similarity must be valid')
+            sys.exit(1)
+        uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=False)
     else:
         print("Pkl files not found...!")
         run_script()
-        load_data()
-
-    
-    if (movies_df is None or similarity is None): 
-        print('Both paths to movies list and similarity must be valid')
-        sys.exit(1)
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=False)
+        if (movies_df is None or similarity is None): 
+            print('Both paths to movies list and similarity must be valid')
+            sys.exit(1)
+        uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=False)
