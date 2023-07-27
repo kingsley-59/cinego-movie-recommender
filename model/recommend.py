@@ -107,7 +107,9 @@ def run_recommendation_algorithm():
     vectors = tfidf.fit_transform(new_df['tags']).toarray()
 
     # Apply stem function and generate similarity
+    print("Applying word stemmer function...")
     new_df['tags'] = new_df['tags'].apply(stem)
+    print("Creating similarity matrix...")
     similarity = cosine_similarity(vectors)
     
     # Clear large variables no longer needed to free up memory
