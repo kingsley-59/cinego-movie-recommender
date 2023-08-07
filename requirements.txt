@@ -6,4 +6,6 @@ matplotlib
 numpy
 pandas
 nltk
+SQLAlchemy
+mysqlclient
 mysql-connector-python

@@ -10,7 +10,7 @@ from fastapi.responses import PlainTextResponse
 from pandas import DataFrame
 # from memory_profiler import profile
 from movies import get_movie_by_id, get_movie_by_name
-from model.recommend import run_script, generate_recommendation
+from model.cinego_movies import run_script, generate_recommendation, movies_pkl_file, similarity_pkl_file
 
 pd.options.mode.chained_assignment = None
 
@@ -18,6 +18,7 @@ app = FastAPI()
 
 movies_df: DataFrame = None
 similarity = None
+
 
 def load_pickle_file(file_path: str):
     if os.path.exists(file_path):
@@ -31,8 +32,10 @@ def load_pickle_file(file_path: str):
 def load_data():
     global movies_df
     global similarity
-    movies_df = load_pickle_file('./model/movies_list.pkl')
-    similarity = load_pickle_file('./model/similarity.pkl')
+    # movies_df = load_pickle_file('./model/movies_list.pkl')
+    # similarity = load_pickle_file('./model/similarity.pkl')
+    movies_df = load_pickle_file(movies_pkl_file)
+    similarity = load_pickle_file(similarity_pkl_file)
     print('Movies and similarity data loaded!')
 
 
@@ -79,13 +82,20 @@ async def get_movie_recommendation(movie: Union[str, None] = None, count: int = 
         }
 
 @app.get("/shutdown")
-async def shutdown():
-    os.kill(os.getpid(), signal.SIGINT)
-    return PlainTextResponse("Server shutting down")
+async def shutdown(password: Union[str, None] = None):
+    if (password == '@cingo_fc'):
+        os.kill(os.getpid(), signal.SIGINT)
+        return PlainTextResponse("Server shutting down")
+    else:
+        return {
+            "status": "error",
+            "message": "Unauthorized! Get lost man."
+        }
 
-if __name__ == "__main__":
-    print(os.path.exists('./model/movies_list.pkl') and os.path.exists('./model/similarity.pkl'))
-    if os.path.exists('./model/movies_list.pkl') and os.path.exists('./model/similarity.pkl'):
+
+def run_server():
+    print(os.path.exists(movies_pkl_file) and os.path.exists(similarity_pkl_file))
+    if os.path.exists(movies_pkl_file) and os.path.exists(similarity_pkl_file):
         load_data()
         if (movies_df is None or similarity is None): 
             print('Both paths to movies list and similarity must be valid')
@@ -99,3 +109,7 @@ if __name__ == "__main__":
             print('App data error: Both paths to movies list and similarity must be valid')
             sys.exit(1)
         uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=False)
+
+
+if __name__ == "__main__":
+    run_server()
