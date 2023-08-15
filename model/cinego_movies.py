@@ -56,7 +56,6 @@ def stem(text):
 # Main recommendation function
 def generate_recommendation(movie: str, movies_df: DataFrame, similarity, count= 5):
     movie_index = movies_df[movies_df['title'].apply(lambda x:x.lower())==movie.lower()].index[0]
-    print(movie_index)
     distances = similarity[movie_index]
     movie_list = sorted(list(enumerate(distances)), reverse=True, key=lambda x:x[1])[1:count+1]
     
@@ -64,7 +63,20 @@ def generate_recommendation(movie: str, movies_df: DataFrame, similarity, count=
     for index, distance in movie_list:
         movie_data = movies_df.iloc[index].to_dict()
         movie_data['distance'] = distance
-        recommended_movies.append(movie_data)
+        recommended_movies.append(movie_data['id'])
+
+    return recommended_movies
+
+def generate_recommendation_by_id(movie_id: str, movies_df: DataFrame, similarity, count= 5):
+    movie_index = movies_df[movies_df['id'] == movie_id].index[0]
+    distances = similarity[movie_index]
+    movie_list = sorted(list(enumerate(distances)), reverse=True, key=lambda x:x[1])[1:count+1]
+    
+    recommended_movies = []
+    for index, distance in movie_list:
+        movie_data = movies_df.iloc[index].to_dict()
+        movie_data['distance'] = distance
+        recommended_movies.append(movie_data['id'])
 
     return recommended_movies
 

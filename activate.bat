@@ -1,0 +1,1 @@
+cinego-venv\Scripts\activate.bat
