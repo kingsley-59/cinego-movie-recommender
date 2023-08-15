@@ -11,7 +11,7 @@ db_name = 'db_agency'
 if os.getenv('ENVIRONMENT') == 'production':
     db_user = os.getenv('DB_USERNAME')
     db_password = os.getenv('DB_PASSWORD')
-    db_host = 'localhost'
+    db_host = 'cinego.live'
     db_name = 'db_agency'
 
 print(db_user)
