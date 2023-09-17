@@ -85,14 +85,19 @@ def generate_recommendation_by_id(movie_id: str, movies_df: DataFrame, similarit
 def run_recommendation_algorithm():
     global new_df
     global similarity
+    current_directory = os.getcwd()
     
     # Load movies from database
-    movies_query =  "SELECT * FROM movies;"
-    movies_df = pd.read_sql_query(movies_query, engine)
+    # movies_query =  "SELECT * FROM movies;"
+    # movies_df = pd.read_sql_query(movies_query, engine)
+    movies_file = os.path.join(current_directory, 'db', 'cinego-movies.csv')
+    movies_df = pd.read_csv(movies_file)
     
     # Load genres from genre table 
-    genres_query =  "SELECT mg.movie_id, g.genre FROM movie_genre mg JOIN genre g ON mg.genre_id = g.id;"
-    genre_df = pd.read_sql_query(genres_query, engine)
+    # genres_query =  "SELECT mg.movie_id, g.genre FROM movie_genre mg JOIN genre g ON mg.genre_id = g.id;"
+    # genre_df = pd.read_sql_query(genres_query, engine)
+    genres_file = os.path.join(current_directory, 'db', 'movie-genres.csv')
+    genre_df = pd.read_csv(genres_file)
     
     # Group by movie_id and aggregate genres into a list and merge with movies
     grouped_genre_df = genre_df.groupby('movie_id')['genre'].agg(list).reset_index()
