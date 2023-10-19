@@ -71,7 +71,6 @@ async def get_movie(movie_id: Union[int, str]):
 
 @app.get('/recommend')
 async def get_movie_recommendation(movie: Union[str, None] = None, movie_id: Union[int, None] = None, count: int = 5):
-    print(movie)
     if movie is None and movie_id is None:
         return {
             "status": "error",
@@ -133,7 +132,7 @@ def run_server():
             print('App data error: Both paths to movies list and similarity must be valid')
             sys.exit(1)
 
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=False)
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
 
 
 if __name__ == "__main__":

@@ -63,7 +63,7 @@ def generate_recommendation(movie: str, movies_df: DataFrame, similarity, count=
     for index, distance in movie_list:
         movie_data = movies_df.iloc[index].to_dict()
         movie_data['distance'] = distance
-        recommended_movies.append(movie_data['id'])
+        recommended_movies.append({'id': movie_data['id'], 'distance': distance})
 
     return recommended_movies
 
@@ -76,7 +76,7 @@ def generate_recommendation_by_id(movie_id: str, movies_df: DataFrame, similarit
     for index, distance in movie_list:
         movie_data = movies_df.iloc[index].to_dict()
         movie_data['distance'] = distance
-        recommended_movies.append(movie_data['id'])
+        recommended_movies.append({'id': movie_data['id'], 'distance': distance})
 
     return recommended_movies
 
