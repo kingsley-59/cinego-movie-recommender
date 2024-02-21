@@ -3,7 +3,11 @@ model/*.pkl
 
 .vscode
 __pycache__
-cinego-venv
+venv
 
-.env
-.env.*
+.archive
+*.zip
+
+
+# .env
+# .env.*
