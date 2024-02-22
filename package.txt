@@ -1,2 +1,4 @@
+default-libmysqlclient-dev
 build-essential
 python3-dev
+pkg-config
